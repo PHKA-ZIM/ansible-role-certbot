@@ -1,0 +1,8 @@
+---
+- name: Install certbot
+  ansible.builtin.include_tasks: install.yml
+  when: certbot_uninstall == false
+
+- name: Uninstall certbot
+  ansible.builtin.include_tasks: uninstall.yml
+  when: certbot_uninstall == true

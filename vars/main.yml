@@ -1,0 +1,6 @@
+---
+certbot_packages: 
+  - certbot
+
+certbot_certbot_bin: /usr/bin/certbot
+certbot_sleep_bin: /usr/bin/sleep

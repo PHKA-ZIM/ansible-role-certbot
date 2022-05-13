@@ -1,0 +1,19 @@
+---
+- name: Revoke certificates
+  become: true
+  ansible.builtin.command:
+    cmd: >
+      certbot revoke 
+        --server {{ certbot_server }}
+        --cert-name {{ item }}
+        --reason cessationofoperation
+        --delete-after-revoke
+    removes: "/etc/letsencrypt/live/{{ item }}"
+  loop: "{{ certbot_vhosts }}"
+
+- name: Uninstall certbot
+  ansible.builtin.import_role:  
+    name: ansible-role-installer
+  vars:
+    installer_packages: "{{ certbot_packages }}"
+    installer_uninstall: true
