@@ -11,6 +11,12 @@
     removes: "/etc/letsencrypt/live/{{ item }}"
   loop: "{{ certbot_vhosts }}"
 
+- name: Remove cron for renewing certs
+  become: true
+  ansible.builtin.cron:
+    name: certbot renew
+    state: absent
+
 - name: Uninstall certbot
   ansible.builtin.import_role:  
     name: ansible-role-installer

@@ -23,7 +23,7 @@
     creates: "/etc/letsencrypt/live/{{ item }}"
   loop: "{{ certbot_vhosts }}"
 
-- name: Add cron for renew certs
+- name: Add cron for renewing certs
   become: true
   ansible.builtin.cron:
     name: certbot renew
