@@ -6,6 +6,7 @@
     installer_packages: "{{ certbot_packages }}"
 
 - name: Request certificates
+  when: certbot_email | length > 0 and certbot_server | length > 0 and certbot_eab_kid | length > 0 and certbot_eab_hmac_key | length > 0
   become: true
   ansible.builtin.command:
     cmd: >
@@ -27,7 +28,11 @@
   become: true
   ansible.builtin.cron:
     name: certbot renew
-    job: "{{ certbot_sleep_bin }} 1262 && {{ certbot_certbot_bin }} renew --post-hook '{{ certbot_post_hook }}' --quiet"
+    job: >
+      {{ certbot_sleep_bin }} 1262 &&
+      {{ certbot_certbot_bin }} renew
+      {% if certbot_post_hook | length > 0 %}--post-hook '{{ certbot_post_hook }}'{% endif %}
+      --quiet
     minute: "0"
     hour: "0,12"
     state: present
