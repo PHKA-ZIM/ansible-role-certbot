@@ -1,12 +1,14 @@
 ---
 - name: Revoke certificates
+  when:
+    - certbot_server | length > 0
   become: true
   ansible.builtin.command:
     cmd: >
       certbot revoke 
         --server {{ certbot_server }}
         --cert-name {{ item }}
-        --reason cessationofoperation
+        --reason unspecified
         --delete-after-revoke
     removes: "/etc/letsencrypt/live/{{ item }}"
   loop: "{{ certbot_vhosts }}"
