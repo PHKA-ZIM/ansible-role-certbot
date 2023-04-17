@@ -24,6 +24,7 @@
         --eab-hmac-key {{ certbot_eab_hmac_key }}
         --domain {{ item }}
         --cert-name {{ item }}
+        --rsa-key-size {{ certbot_rsa_key_size }}
         --keep-until-expiring
     creates: "/etc/letsencrypt/live/{{ item }}"
   loop: "{{ certbot_vhosts }}"
