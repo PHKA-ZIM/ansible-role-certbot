@@ -5,6 +5,8 @@ certbot_server: ""
 certbot_eab_kid: ""
 certbot_eab_hmac_key: ""
 
-certbot_post_hook: /etc/init.d/nginx restart
+certbot_post_hook: /etc/init.d/nginx reload
 
 certbot_uninstall: false
+
+certbot_rsa_key_size: 4096
