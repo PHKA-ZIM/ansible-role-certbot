@@ -1,27 +1,9 @@
 ---
-- name: Revoke certificates
-  when:
-    - certbot_server | length > 0
+- name: Ensure that packages are uninstalled
   become: true
-  ansible.builtin.command:
-    cmd: >
-      certbot revoke 
-        --server {{ certbot_server }}
-        --cert-name {{ item }}
-        --reason unspecified
-        --delete-after-revoke
-    removes: "/etc/letsencrypt/live/{{ item }}"
-  loop: "{{ certbot_vhosts }}"
-
-- name: Remove cron for renewing certs
-  become: true
-  ansible.builtin.cron:
-    name: certbot renew
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    autoremove: "{{ certbot_autoremove }}"
+    purge: "{{ certbot_purge }}"
     state: absent
-
-- name: Uninstall certbot
-  ansible.builtin.import_role:  
-    name: ansible-role-installer
-  vars:
-    installer_packages: "{{ certbot_packages }}"
-    installer_uninstall: true
+  loop: "{{ certbot_packages }}"

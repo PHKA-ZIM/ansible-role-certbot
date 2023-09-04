@@ -1,0 +1,36 @@
+---
+- name: Request certificates
+  when:
+    - certbot_email | length > 0
+    - certbot_server | length > 0
+    - certbot_eab_kid | length > 0
+    - certbot_eab_hmac_key | length > 0
+  become: true
+  ansible.builtin.command:
+    cmd: >
+      certbot certonly 
+        --standalone
+        --non-interactive
+        --agree-tos
+        --email {{ certbot_email }}
+        --server {{ certbot_server }}
+        --eab-kid {{ certbot_eab_kid }}
+        --eab-hmac-key {{ certbot_eab_hmac_key }}
+        --domain {{ item }}
+        --cert-name {{ item }}
+        --keep-until-expiring
+    creates: "/etc/letsencrypt/live/{{ item }}"
+  loop: "{{ certbot_vhosts }}"
+
+- name: Add cron for renewing certs
+  become: true
+  ansible.builtin.cron:
+    name: certbot renew
+    job: >
+      {{ certbot_sleep_bin }} 1262 &&
+      {{ certbot_certbot_bin }} renew
+      {% if certbot_post_hook | length > 0 %}--post-hook '{{ certbot_post_hook }}'{% endif %}
+      --quiet
+    minute: "0"
+    hour: "0,12"
+    state: present

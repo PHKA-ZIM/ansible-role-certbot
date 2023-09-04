@@ -8,3 +8,5 @@ certbot_eab_hmac_key: ""
 certbot_post_hook: /etc/init.d/nginx restart
 
 certbot_uninstall: false
+certbot_autoremove: true
+certbot_purge: true
