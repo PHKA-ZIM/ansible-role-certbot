@@ -20,12 +20,12 @@
         --cert-name {{ item }}
         --keep-until-expiring
     creates: "/etc/letsencrypt/live/{{ item }}"
-  loop: "{{ certbot_vhosts }}"
+  loop: "{{ certbot_domains }}"
 
 - name: Add cron for renewing certs
   become: true
   ansible.builtin.cron:
-    name: certbot renew
+    name: certbot-renew
     job: >
       {{ certbot_sleep_bin }} 1262 &&
       {{ certbot_certbot_bin }} renew

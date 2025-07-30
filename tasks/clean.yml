@@ -11,10 +11,10 @@
         --reason unspecified
         --delete-after-revoke
     removes: "/etc/letsencrypt/live/{{ item }}"
-  loop: "{{ certbot_vhosts }}"
+  loop: "{{ certbot_domains }}"
 
 - name: Remove cron for renewing certs
   become: true
   ansible.builtin.cron:
-    name: certbot renew
+    name: certbot-renew
     state: absent
