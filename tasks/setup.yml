@@ -22,15 +22,14 @@
     creates: "/etc/letsencrypt/live/{{ item }}"
   loop: "{{ certbot_domains }}"
 
-- name: Add cron for renewing certs
+- name: Add post hook for renewing certs
   become: true
-  ansible.builtin.cron:
-    name: certbot-renew
-    job: >
-      {{ certbot_sleep_bin }} 1262 &&
-      {{ certbot_certbot_bin }} renew
-      {% if certbot_post_hook | length > 0 %}--post-hook '{{ certbot_post_hook }}'{% endif %}
-      --quiet
-    minute: "0"
-    hour: "0,12"
+  ansible.builtin.lineinfile:
+    path: /etc/letsencrypt/renewal/{{ item }}.conf
+    search_string: post_hook
+    line: "post_hook = {{ certbot_post_hook }}"
     state: present
+  when:
+    certbot_post_hook is defined
+    certbot_post_hook | length > 0
+  loop: "{{ certbot_domains }}"
