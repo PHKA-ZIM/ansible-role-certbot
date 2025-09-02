@@ -30,6 +30,6 @@
     line: "post_hook = {{ certbot_post_hook }}"
     state: present
   when:
-    certbot_post_hook is defined
-    certbot_post_hook | length > 0
+    - certbot_post_hook is defined
+    - certbot_post_hook | length > 0
   loop: "{{ certbot_domains }}"
