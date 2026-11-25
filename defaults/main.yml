@@ -5,7 +5,7 @@ certbot_server: ""
 certbot_eab_kid: ""
 certbot_eab_hmac_key: ""
 
-certbot_post_hook: /etc/init.d/nginx restart
+certbot_post_hook: systemctl reload nginx
 
 certbot_uninstall: false
 certbot_autoremove: true
